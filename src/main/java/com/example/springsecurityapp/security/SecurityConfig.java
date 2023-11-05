@@ -72,6 +72,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvcRequestMatcher.pattern("/auth/info")).permitAll()
+                        .requestMatchers(mvcRequestMatcher.pattern("/producers")).permitAll()
                         .requestMatchers(mvcRequestMatcher.pattern("/auth/user/**")).hasRole("USER")
                         .requestMatchers(mvcRequestMatcher.pattern("/auth/admin/**")).hasRole("ADMIN")
                         .anyRequest().authenticated()
