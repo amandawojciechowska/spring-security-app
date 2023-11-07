@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<ProductTo> getAllProducts();
-
     public Page<ProductTo> getAllProductsPaginated(int page, int size);
 
     List<ProductTo> getAllProductsByProducer(ProducerEntity producer);
+
+    public List<ProductTo> searchProductsByName(String name);
 
 }

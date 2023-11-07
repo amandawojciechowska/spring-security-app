@@ -33,4 +33,10 @@ public class ProductController {
         return productService.getAllProductsByProducer(producer);
     }
 
+    @GetMapping("/search")
+    public List<ProductTo> searchProducts(
+            @RequestParam(name = "name") String name) {
+        return productService.searchProductsByName(name);
+    }
+
 }

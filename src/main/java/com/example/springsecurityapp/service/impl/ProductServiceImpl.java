@@ -24,13 +24,6 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    @Transactional(readOnly = true)
-    public List<ProductTo> getAllProducts() {
-        List<ProductEntity> products = productRepository.findAll();
-        return ProductMapper.mapProductEntities2Tos(products);
-    }
-
-    @Override
     public Page<ProductTo> getAllProductsPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductEntity> productPage = productRepository.findAll(pageable);
@@ -44,6 +37,12 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<ProductTo> getAllProductsByProducer(ProducerEntity producer) {
         List<ProductEntity> products = productRepository.findByProducer(producer);
+        return ProductMapper.mapProductEntities2Tos(products);
+    }
+
+    @Override
+    public List<ProductTo> searchProductsByName(String name) {
+        List<ProductEntity> products = productRepository.findByNameContaining(name);
         return ProductMapper.mapProductEntities2Tos(products);
     }
 

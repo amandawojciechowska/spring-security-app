@@ -31,4 +31,5 @@ VALUES  (1, 'hydrolat rozmaryn', 10),
         (18, 'zel oliwkowy', 7),
         (19, 'zel kokos i sol morska', 9),
         (20, 'zel roza i kadzidlowiec', 9),
-        (21, 'zel rumianek i pokrzywa', 9);
+        (21, 'zel rumianek i pokrzywa', 9),
+        (22, 'taki sobie zel', 1);
