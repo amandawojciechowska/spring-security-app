@@ -1,7 +1,11 @@
 package com.example.springsecurityapp.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "PRODUCT")
 public class ProductEntity {

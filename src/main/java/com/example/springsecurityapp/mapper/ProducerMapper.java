@@ -8,16 +8,16 @@ import java.util.stream.Collectors;
 
 public class ProducerMapper {
 
-    public static ProducerTo toProducerTo(ProducerEntity producerEntity) {
+    public static ProducerTo mapProducerEntityToTo(ProducerEntity producerEntity) {
         if (producerEntity == null) {
             return null;
         }
         return ProducerTo.builder().name(producerEntity.getName()).build();
     }
 
-    public static List<ProducerTo> map2Tos(List<ProducerEntity> producerEntities) {
+    public static List<ProducerTo> mapProducerEntities2Tos(List<ProducerEntity> producerEntities) {
         return producerEntities.stream()
-                .map(ProducerMapper::toProducerTo)
+                .map(ProducerMapper::mapProducerEntityToTo)
                 .collect(Collectors.toList());
     }
 

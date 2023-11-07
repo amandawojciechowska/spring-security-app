@@ -2,13 +2,23 @@ package com.example.springsecurityapp.mapper;
 
 import com.example.springsecurityapp.entity.ProductEntity;
 import com.example.springsecurityapp.model.ProductTo;
-import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
-public interface ProductMapper {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    ProductEntity mapProductToToEntity(ProductTo source);
+public class ProductMapper {
 
-    ProductTo mapProductEntityToTo(ProductEntity source);
+    public static ProductTo mapProductEntityToTo(ProductEntity productEntity) {
+        if (productEntity == null) {
+            return null;
+        }
+        return ProductTo.builder().name(productEntity.getName()).build();
+    }
+
+    public static List<ProductTo> mapProductEntities2Tos(List<ProductEntity> productEntities) {
+        return productEntities.stream()
+                .map(ProductMapper::mapProductEntityToTo)
+                .collect(Collectors.toList());
+    }
 
 }

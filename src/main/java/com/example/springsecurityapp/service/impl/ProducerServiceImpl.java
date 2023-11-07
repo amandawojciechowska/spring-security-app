@@ -22,7 +22,7 @@ public class ProducerServiceImpl implements ProducerService {
     @Transactional(readOnly = true)
     public List<ProducerTo> getAllProducers() {
         List<ProducerEntity> producers = producerRepository.findAll();
-        return ProducerMapper.map2Tos(producers);
+        return ProducerMapper.mapProducerEntities2Tos(producers);
     }
 
 }
