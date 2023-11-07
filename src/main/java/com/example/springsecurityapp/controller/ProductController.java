@@ -6,10 +6,8 @@ import com.example.springsecurityapp.model.ProductTo;
 import com.example.springsecurityapp.repository.ProducerRepository;
 import com.example.springsecurityapp.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +18,13 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProducerRepository producerRepository;
+
+    @GetMapping
+    public Page<ProductTo> getAllProducts(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        return productService.getAllProductsPaginated(page, size);
+    }
 
     @GetMapping("/{producerId}")
     public List<ProductTo> getProductsByProducerId(@PathVariable("producerId") Long producerId) {
