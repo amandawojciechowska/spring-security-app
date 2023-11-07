@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,8 +43,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductTo> searchProductsByName(String name) {
-        List<ProductEntity> products = productRepository.findByNameContaining(name);
-        return ProductMapper.mapProductEntities2Tos(products);
+        List<ProductEntity> matchingProducts = new ArrayList<>();
+        List<ProductEntity> products = productRepository.findAll();
+        for (ProductEntity product : products) {
+            String[] strings = product.getName().split(" ");
+            for (String string : strings) {
+                if (string.equalsIgnoreCase(name)) {
+                    matchingProducts.add(product);
+                }
+            }
+        }
+        return ProductMapper.mapProductEntities2Tos(matchingProducts);
     }
 
 }
