@@ -20,22 +20,18 @@ public class ProductController {
     private final ProducerRepository producerRepository;
 
     @GetMapping
-    public Page<ProductTo> getAllProducts(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size) {
+    public Page<ProductTo> getAllProducts(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size) {
         return productService.getAllProductsPaginated(page, size);
     }
 
     @GetMapping("/{producerId}")
     public List<ProductTo> getProductsByProducerId(@PathVariable("producerId") Long producerId) {
-        ProducerEntity producer = producerRepository.findById(producerId)
-                .orElseThrow(() -> new NotFoundException("Producer not found with ID: " + producerId));
+        ProducerEntity producer = producerRepository.findById(producerId).orElseThrow(() -> new NotFoundException("Producer not found with ID: " + producerId));
         return productService.getAllProductsByProducer(producer);
     }
 
     @GetMapping("/search")
-    public List<ProductTo> searchProducts(
-            @RequestParam(name = "name") String name) {
+    public List<ProductTo> searchProducts(@RequestParam(name = "name") String name) {
         return productService.searchProductsByName(name);
     }
 
