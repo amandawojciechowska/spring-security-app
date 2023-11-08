@@ -3,6 +3,7 @@ package com.example.springsecurityapp.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -74,7 +75,8 @@ public class SecurityConfig {
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvcRequestMatcher.pattern("/auth/info")).permitAll()
                         .requestMatchers(mvcRequestMatcher.pattern("/producers")).permitAll()
-                        .requestMatchers(mvcRequestMatcher.pattern("/products/**")).permitAll()
+                        .requestMatchers(mvcRequestMatcher.pattern(HttpMethod.GET, "/products/**")).permitAll()
+                        .requestMatchers(mvcRequestMatcher.pattern(HttpMethod.POST, "/products/create")).hasRole("ADMIN")
                         .requestMatchers(mvcRequestMatcher.pattern("/auth/user/**")).hasRole("USER")
                         .requestMatchers(mvcRequestMatcher.pattern("/auth/admin/**")).hasRole("ADMIN")
                         .anyRequest().authenticated()

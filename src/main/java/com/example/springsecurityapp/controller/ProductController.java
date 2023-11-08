@@ -2,14 +2,20 @@ package com.example.springsecurityapp.controller;
 
 import com.example.springsecurityapp.entity.ProducerEntity;
 import com.example.springsecurityapp.exception.NotFoundException;
+import com.example.springsecurityapp.model.ProductRequest;
 import com.example.springsecurityapp.model.ProductTo;
 import com.example.springsecurityapp.repository.ProducerRepository;
 import com.example.springsecurityapp.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/products")
@@ -33,6 +39,17 @@ public class ProductController {
     @GetMapping("/search")
     public List<ProductTo> searchProducts(@RequestParam(name = "name") String name) {
         return productService.searchProductsByName(name);
+    }
+
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(CREATED)
+    public ResponseEntity<String> createProduct(@RequestBody @Validated ProductRequest productRequest) {
+        if (productRequest.getName() == null) {
+            return ResponseEntity.badRequest().body("No required parameters!");
+        }
+        productService.addProduct(productRequest);
+        return ResponseEntity.ok("Product added successfully!");
     }
 
 }

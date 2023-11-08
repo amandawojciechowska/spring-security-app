@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,4 +26,15 @@ public class ProducerServiceImpl implements ProducerService {
         return ProducerMapper.mapProducerEntities2Tos(producers);
     }
 
+    @Override
+    public ProducerEntity getOrCreateProducer(String name) {
+        Optional<ProducerEntity> producer = producerRepository.findByName(name);
+        if (producer.isPresent()) {
+            return producer.get();
+        } else {
+            ProducerEntity newProducer = new ProducerEntity();
+            newProducer.setName(name);
+            return producerRepository.save(newProducer);
+        }
+    }
 }

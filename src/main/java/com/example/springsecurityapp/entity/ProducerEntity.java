@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Collection;
-
 @Getter
 @Setter
 @Entity
@@ -18,8 +16,5 @@ public class ProducerEntity {
 
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
-
-    @OneToMany(mappedBy = "producer")
-    private Collection<ProductEntity> products;
 
 }

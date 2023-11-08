@@ -3,8 +3,11 @@ package com.example.springsecurityapp.service.impl;
 import com.example.springsecurityapp.entity.ProducerEntity;
 import com.example.springsecurityapp.entity.ProductEntity;
 import com.example.springsecurityapp.mapper.ProductMapper;
+import com.example.springsecurityapp.model.ProductRequest;
 import com.example.springsecurityapp.model.ProductTo;
+import com.example.springsecurityapp.repository.ProducerRepository;
 import com.example.springsecurityapp.repository.ProductRepository;
+import com.example.springsecurityapp.service.ProducerService;
 import com.example.springsecurityapp.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +26,8 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProducerRepository producerRepository;
+    private final ProducerService producerService;
 
     @Override
     public Page<ProductTo> getAllProductsPaginated(int page, int size) {
@@ -55,6 +60,16 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return ProductMapper.mapProductEntities2Tos(matchingProducts);
+    }
+
+    @Override
+    public ProductTo addProduct(final ProductRequest productRequest) {
+        ProducerEntity producer = producerService.getOrCreateProducer(productRequest.getProducerName());
+        ProductEntity product = new ProductEntity();
+        product.setName(productRequest.getName());
+        product.setProducer(producer);
+        ProductEntity productEntity = productRepository.save(product);
+        return ProductMapper.mapProductEntityToTo(productEntity);
     }
 
 }
