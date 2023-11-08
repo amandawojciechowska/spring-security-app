@@ -50,6 +50,7 @@ public class ProductServiceImpl implements ProductService {
             for (String string : strings) {
                 if (string.equalsIgnoreCase(name)) {
                     matchingProducts.add(product);
+                    break;
                 }
             }
         }
