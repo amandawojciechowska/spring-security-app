@@ -36,6 +36,12 @@ public class SecurityConfig {
     @Value("${spring.security.user2.name}")
     private String userName2;
 
+    @Value("${spring.security.user3.password}")
+    private String userPassword3;
+
+    @Value("${spring.security.user3.name}")
+    private String userName3;
+
 
     // Password Encoding
     @Bean
@@ -58,6 +64,11 @@ public class SecurityConfig {
                 .roles("USER")
                 .build();
 
+        UserDetails user2 = User.withUsername(userName3)
+                .password(encoder.encode(userPassword3))
+                .roles("USER")
+                .build();
+
         return new InMemoryUserDetailsManager(admin, user);
     }
 
@@ -75,6 +86,7 @@ public class SecurityConfig {
                         .requestMatchers(mvcRequestMatcher.pattern("/auth/info")).permitAll()
                         .requestMatchers(mvcRequestMatcher.pattern("/producers")).permitAll()
                         .requestMatchers(mvcRequestMatcher.pattern("/products/**")).permitAll()
+                        .requestMatchers(mvcRequestMatcher.pattern("/cart/**")).hasRole("USER")
                         .requestMatchers(mvcRequestMatcher.pattern("/auth/user/**")).hasRole("USER")
                         .requestMatchers(mvcRequestMatcher.pattern("/auth/admin/**")).hasRole("ADMIN")
                         .anyRequest().authenticated()

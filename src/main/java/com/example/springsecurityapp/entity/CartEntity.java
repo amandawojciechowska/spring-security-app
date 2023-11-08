@@ -1,10 +1,14 @@
 package com.example.springsecurityapp.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "CART")
-public class Cart {
+public class CartEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,10 +17,4 @@ public class Cart {
     @Column(name = "USERNAME", nullable = false)
     private String userName;
 
-    @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID", nullable = false)
-    private ProducerEntity producer;
-
-    @Column(name = "QUANTITY", nullable = false)
-    private Long quantity;
 }

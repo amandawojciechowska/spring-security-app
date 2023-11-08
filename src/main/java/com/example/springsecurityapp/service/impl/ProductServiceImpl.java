@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +56,12 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return ProductMapper.mapProductEntities2Tos(matchingProducts);
+    }
+
+    @Override
+    public Optional<ProductEntity> getProductById(Long id) {
+        //CHYBA POWINNO BYC PRODUCT TO
+        return productRepository.findById(id);
     }
 
 }
