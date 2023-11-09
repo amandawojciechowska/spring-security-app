@@ -12,10 +12,12 @@ import com.example.springsecurityapp.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,14 +30,11 @@ public class CartController {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 
-    @GetMapping("/{username}")
-    public List<ProductTo> getCartWithProductsByUsername(@PathVariable("username") String username) {
-        return null;
-    }
-
     @PostMapping("/add-product")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> addItemToCart(@RequestBody CartItemRequest cartItemRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER")) && authentication.isAuthenticated()) {
             String username = authentication.getName();
             Long productId = cartItemRequest.getProductId();
@@ -48,6 +47,24 @@ public class CartController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No permissions.");
         }
+    }
+
+    @GetMapping("/{username}")
+    @PreAuthorize("hasRole('USER')")
+    public List<ProductTo> getCartWithProductsByUsername(@PathVariable("username") String username) {
+        if (username == null) {
+            throw new IllegalArgumentException("Parameter username must be completed!");
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER")) && authentication.isAuthenticated()) {
+            String nameLoggedUser = authentication.getName();
+            if (nameLoggedUser.equals(username)) {
+                return cartService.getProductsFromCartForUser(username);
+            }
+        }
+        return new ArrayList<>();
     }
 
     private void validParametersInRequest(Long productId, Long quantity) {
