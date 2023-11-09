@@ -74,6 +74,7 @@ public class SecurityConfig {
     }
 
     // Configuring HttpSecurity
+    //TODO DELETED ACCESS TO H2 CONSOLE
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
         MvcRequestMatcher.Builder mvcRequestMatcher = new MvcRequestMatcher.Builder(introspector);
