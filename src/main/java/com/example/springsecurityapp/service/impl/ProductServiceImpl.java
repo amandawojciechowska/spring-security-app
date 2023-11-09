@@ -59,9 +59,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<ProductEntity> getProductById(Long id) {
-        //CHYBA POWINNO BYC PRODUCT TO
-        return productRepository.findById(id);
+    public Optional<ProductTo> getProductById(Long id) {
+        Optional<ProductEntity> optionalProductEntity =  productRepository.findById(id);
+        return optionalProductEntity.map(ProductMapper::mapProductEntityToTo);
     }
 
 }

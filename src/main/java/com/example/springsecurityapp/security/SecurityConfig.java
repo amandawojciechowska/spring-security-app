@@ -69,7 +69,7 @@ public class SecurityConfig {
                 .roles("USER")
                 .build();
 
-        return new InMemoryUserDetailsManager(admin, user);
+        return new InMemoryUserDetailsManager(admin, user, user2);
     }
 
     // Configuring HttpSecurity

@@ -16,6 +16,6 @@ public interface ProductService {
 
     public List<ProductTo> searchProductsByName(String name);
 
-    public Optional<ProductEntity> getProductById(Long id);
+    public Optional<ProductTo> getProductById(Long id);
 
 }

@@ -18,6 +18,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartEntity getOrCreateCartForUser(String username) {
+        //CART TO MAPPERA DODAĆ
         Optional<CartEntity> cart = cartRepository.findByUserName(username);
         if (cart.isPresent()) {
             return cart.get();

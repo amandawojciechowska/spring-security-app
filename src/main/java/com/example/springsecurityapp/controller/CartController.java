@@ -3,11 +3,12 @@ package com.example.springsecurityapp.controller;
 import com.example.springsecurityapp.entity.CartEntity;
 import com.example.springsecurityapp.entity.CartItemEntity;
 import com.example.springsecurityapp.entity.ProductEntity;
+import com.example.springsecurityapp.exception.NotFoundException;
 import com.example.springsecurityapp.model.CartItemRequest;
 import com.example.springsecurityapp.model.ProductTo;
 import com.example.springsecurityapp.repository.CartItemRepository;
+import com.example.springsecurityapp.repository.ProductRepository;
 import com.example.springsecurityapp.service.CartService;
-import com.example.springsecurityapp.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ import java.util.Optional;
 public class CartController {
 
     private final CartService cartService;
-    private final ProductService productService;
+    private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 
     @GetMapping("/{username}")
@@ -37,19 +38,39 @@ public class CartController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER")) && authentication.isAuthenticated()) {
             String username = authentication.getName();
+            Long productId = cartItemRequest.getProductId();
+            Long quantity = cartItemRequest.getQuantity();
             if (username != null) {
-                CartEntity cart = cartService.getOrCreateCartForUser(username);
-                Optional<ProductEntity> product = productService.getProductById(cartItemRequest.getProductId());
-                CartItemEntity cartItem = new CartItemEntity();
-                cartItem.setCart(cart);
-                cartItem.setProduct(product.get());
-                cartItem.setQuantity(cartItemRequest.getQuantity());
-                CartItemEntity cartItemEntity = cartItemRepository.save(cartItem);
-                System.out.println(cartItemEntity);
+                validParametersInRequest(productId, quantity);
+                saveProductInCart(username, productId, quantity);
             }
             return ResponseEntity.ok("The product has been added to the cart.");
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No permissions.");
         }
+    }
+
+    private void validParametersInRequest(Long productId, Long quantity) {
+        if (productId == null) {
+            throw new IllegalArgumentException("Parameter productId must be completed!");
+        }
+        if (quantity == null) {
+            throw new IllegalArgumentException("Parameter quantity must be completed!");
+        }
+    }
+
+    private void saveProductInCart(String username, Long productId, Long quantity) {
+        CartEntity cart = cartService.getOrCreateCartForUser(username);
+        Optional<ProductEntity> product = productRepository.findById(productId);
+
+        if (product.isEmpty()) {
+            throw new NotFoundException("Product not found with ID: " + productId);
+        }
+
+        CartItemEntity cartItem = new CartItemEntity();
+        cartItem.setCart(cart);
+        cartItem.setProduct(product.get());
+        cartItem.setQuantity(quantity);
+        cartItemRepository.save(cartItem);
     }
 }
