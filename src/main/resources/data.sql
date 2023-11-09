@@ -33,3 +33,11 @@ VALUES ('hydrolat rozmaryn', 10),
        ('zel roza i kadzidlowiec', 9),
        ('zel rumianek i pokrzywa', 9),
        ('taki sobie zel', 1);
+
+INSERT INTO cart (username)
+VALUES ('user');
+
+INSERT INTO cart_item (cart_id, product_id, quantity)
+VALUES (1, 1, 2),
+       (1, 2, 1),
+       (1, 3, 7);
