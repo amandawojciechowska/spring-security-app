@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +50,7 @@ public class CartController {
 
     @GetMapping("/{username}")
     @PreAuthorize("hasRole('USER')")
-    public List<ProductTo> getCartWithProductsByUsername(@PathVariable("username") String username) {
+    public ResponseEntity<?> getCartWithProductsByUsername(@PathVariable("username") String username) {
         if (username == null) {
             throw new IllegalArgumentException("Parameter username must be completed!");
         }
@@ -61,10 +60,15 @@ public class CartController {
         if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER")) && authentication.isAuthenticated()) {
             String nameLoggedUser = authentication.getName();
             if (nameLoggedUser.equals(username)) {
-                return cartService.getProductsFromCartForUser(username);
+                List<ProductTo> products = cartService.getProductsFromCartForUser(username);
+                if (!products.isEmpty()) {
+                    return ResponseEntity.ok(products);
+                } else {
+                    ResponseEntity.status(HttpStatus.NOT_FOUND).body("There are no products in your cart.");
+                }
             }
         }
-        return new ArrayList<>();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have access to this shopping cart!");
     }
 
     private void validParametersInRequest(Long productId, Long quantity) {
